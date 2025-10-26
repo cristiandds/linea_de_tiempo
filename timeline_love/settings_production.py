@@ -14,6 +14,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'linea-de-tiempo-ibkf.onrender.com',  # Tu dominio de Render
     # Añadir aquí otros dominios si los tienes
+    'softecperu.com',
 ]
 
 # Database para producción
