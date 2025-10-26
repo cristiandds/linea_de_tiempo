@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Recuerdo - Línea de Tiempo Personal{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-8" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+                <a href="{% url 'memories:timeline' %}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-pink-600 transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                    </svg>
+                    Mi Timeline
+                </a>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    <a href="{% url 'memories:memory_detail' object.pk %}" class="ml-1 text-sm font-medium text-gray-700 hover:text-pink-600 transition-colors md:ml-2">{{ object.title|truncatechars:20 }}</a>
+                </div>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">Eliminar</span>
+                </div>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="text-center mb-8">
+        <div class="mx-auto h-16 w-16 bg-gradient-to-r from-red-400 to-pink-400 rounded-full flex items-center justify-center mb-4">
+            <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-900 font-script mb-2">
+            Eliminar Recuerdo
+        </h1>
+        <p class="text-gray-600">
+            ¿Estás seguro de que quieres eliminar este recuerdo?
+        </p>
+    </div>
+
+    <!-- Tarjeta del recuerdo a eliminar -->
+    <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border border-red-200 mb-8">
+        <!-- Imagen -->
+        {% if object.image %}
+            <div class="aspect-w-16 aspect-h-9 bg-gray-200">
+                <img src="{{ object.image.url }}" alt="{{ object.title }}" class="w-full h-64 object-cover">
+            </div>
+        {% endif %}
+        
+        <!-- Contenido -->
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-bold text-gray-900">
+                    {{ object.title }}
+                </h2>
+                <span class="text-lg text-pink-600 font-medium">
+                    {{ object.date|date:"d M Y" }}
+                </span>
+            </div>
+            
+            <p class="text-gray-700 mb-4">
+                {{ object.description }}
+            </p>
+            
+            <!-- Metadatos -->
+            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <h3 class="text-sm font-medium text-gray-700 mb-2">Información del recuerdo</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+                    <div>
+                        <span class="font-medium">Creado:</span>
+                        {{ object.created_at|date:"d/m/Y H:i" }}
+                    </div>
+                    <div>
+                        <span class="font-medium">Última actualización:</span>
+                        {{ object.updated_at|date:"d/m/Y H:i" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advertencia -->
+    <div class="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
+        <div class="flex items-start">
+            <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-sm font-medium text-red-800">
+                    ¡Atención! Esta acción no se puede deshacer
+                </h3>
+                <div class="mt-2 text-sm text-red-700">
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>El recuerdo será eliminado permanentemente</li>
+                        <li>La imagen asociada también será eliminada del servidor</li>
+                        <li>No podrás recuperar esta información después</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario de confirmación -->
+    <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-red-200">
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Confirmación -->
+            <div class="text-center">
+                <p class="text-lg font-medium text-gray-900 mb-2">
+                    Para confirmar la eliminación, escribe el título del recuerdo:
+                </p>
+                <p class="text-sm text-gray-600 mb-4">
+                    <strong>"{{ object.title }}"</strong>
+                </p>
+                
+                <input type="text" id="confirm-title" placeholder="Escribe el título aquí..." 
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-colors text-center"
+                       onkeyup="checkConfirmation()">
+            </div>
+
+            <!-- Botones -->
+            <div class="flex space-x-4 pt-6">
+                <button type="submit" id="delete-btn" disabled 
+                        class="flex-1 bg-gray-300 text-gray-500 py-3 px-6 rounded-lg font-medium cursor-not-allowed transition-all">
+                    <span class="flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Eliminar Permanentemente
+                    </span>
+                </button>
+                
+                <a href="{% url 'memories:timeline' %}" class="flex-1 bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors text-center">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Alternativas -->
+    <div class="mt-6 text-center">
+        <p class="text-sm text-gray-600 mb-4">
+            ¿Prefieres editar este recuerdo en lugar de eliminarlo?
+        </p>
+        <a href="{% url 'memories:edit_memory' object.pk %}" class="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+            Editar en su lugar
+        </a>
+    </div>
+</div>
+
+<!-- JavaScript para confirmación -->
+<script>
+    const originalTitle = "{{ object.title }}";
+    const confirmInput = document.getElementById('confirm-title');
+    const deleteBtn = document.getElementById('delete-btn');
+    
+    function checkConfirmation() {
+        const inputValue = confirmInput.value.trim();
+        
+        if (inputValue === originalTitle) {
+            deleteBtn.disabled = false;
+            deleteBtn.className = 'flex-1 bg-gradient-to-r from-red-500 to-pink-500 text-white py-3 px-6 rounded-lg font-medium hover:from-red-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all transform hover:scale-105 cursor-pointer';
+        } else {
+            deleteBtn.disabled = true;
+            deleteBtn.className = 'flex-1 bg-gray-300 text-gray-500 py-3 px-6 rounded-lg font-medium cursor-not-allowed transition-all';
+        }
+    }
+    
+    // Prevenir envío accidental
+    document.querySelector('form').addEventListener('submit', function(e) {
+        if (confirmInput.value.trim() !== originalTitle) {
+            e.preventDefault();
+            alert('Debes escribir el título exacto para confirmar la eliminación.');
+            return false;
+        }
+        
+        // Confirmación final
+        if (!confirm('¿Estás absolutamente seguro de que quieres eliminar este recuerdo? Esta acción no se puede deshacer.')) {
+            e.preventDefault();
+            return false;
+        }
+    });
+</script>
+{% endblock %}

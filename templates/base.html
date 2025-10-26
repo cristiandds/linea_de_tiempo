@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Línea de Tiempo Personal{% endblock %}</title>
+    
+    <!-- Favicon -->
+    {% load static %}
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
+    
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuración personalizada de TailwindCSS -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'pink-rose': '#f8d7da',
+                        'pink-soft': '#f5c2c7',
+                        'pink-warm': '#f1aeb5',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Fuentes de Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-script {
+            font-family: 'Dancing Script', cursive;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-pink-50 via-rose-50 to-pink-100 min-h-screen">
+    
+    <!-- Navegación -->
+    <nav class="bg-white/80 backdrop-blur-sm shadow-lg border-b border-pink-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="{% url 'memories:timeline' %}" class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-gradient-to-r from-pink-400 to-rose-400 rounded-full flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <span class="font-script text-2xl font-semibold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+                            Línea de Tiempo
+                        </span>
+                    </a>
+                </div>
+
+                <!-- Navegación principal -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'memories:timeline' %}" class="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                                Mi Timeline
+                            </a>
+                            <a href="{% url 'memories:create_memory' %}" class="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-pink-600 hover:to-rose-600 transition-all transform hover:scale-105">
+                                Nuevo Recuerdo
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Usuario y logout -->
+                <div class="flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                        <div class="flex items-center space-x-3">
+                            <div class="hidden md:block">
+                                <span class="text-sm text-gray-600">Hola,</span>
+                                <span class="text-sm font-medium text-gray-800">{{ user.username }}</span>
+                            </div>
+                            <form method="post" action="{% url 'memories:logout' %}" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="text-gray-600 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                                    Cerrar Sesión
+                                </button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <div class="flex items-center space-x-2">
+                            <a href="{% url 'memories:login' %}" class="text-gray-600 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                                Iniciar Sesión
+                            </a>
+                            <a href="{% url 'memories:register' %}" class="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-pink-600 hover:to-rose-600 transition-all">
+                                Registrarse
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Menú móvil -->
+                <div class="md:hidden">
+                    <button type="button" class="text-gray-600 hover:text-pink-600 focus:outline-none focus:text-pink-600" onclick="toggleMobileMenu()">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú móvil desplegable -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-pink-200">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'memories:timeline' %}" class="block text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-base font-medium">
+                        Mi Timeline
+                    </a>
+                    <a href="{% url 'memories:create_memory' %}" class="block text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-base font-medium">
+                        Nuevo Recuerdo
+                    </a>
+                    <form method="post" action="{% url 'memories:logout' %}" class="block">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full text-left text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-base font-medium bg-transparent border-none cursor-pointer">
+                            Cerrar Sesión
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'memories:login' %}" class="block text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-base font-medium">
+                        Iniciar Sesión
+                    </a>
+                    <a href="{% url 'memories:register' %}" class="block text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-base font-medium">
+                        Registrarse
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mensajes -->
+    {% if messages %}
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+            {% for message in messages %}
+                <div class="mb-4 p-4 rounded-lg {% if message.tags == 'success' %}bg-green-100 border border-green-400 text-green-700{% elif message.tags == 'error' %}bg-red-100 border border-red-400 text-red-700{% elif message.tags == 'warning' %}bg-yellow-100 border border-yellow-400 text-yellow-700{% else %}bg-blue-100 border border-blue-400 text-blue-700{% endif %}">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            {% if message.tags == 'success' %}
+                                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                            {% elif message.tags == 'error' %}
+                                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                                </svg>
+                            {% else %}
+                                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                </svg>
+                            {% endif %}
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium">{{ message }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Contenido principal -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white/50 backdrop-blur-sm border-t border-pink-200 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="text-center">
+                <p class="text-gray-600 text-sm">
+                    © 2025 Línea de Tiempo Personal. Creado con 
+                    <span class="text-pink-600">♥</span> para preservar tus recuerdos más preciados.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript personalizado -->
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

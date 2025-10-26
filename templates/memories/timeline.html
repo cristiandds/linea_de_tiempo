@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %}Mi Línea de Tiempo - Línea de Tiempo Personal{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header de la timeline -->
+    <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-900 font-script mb-2">
+            Mi Línea de Tiempo
+        </h1>
+        <p class="text-lg text-gray-600">
+            Tus recuerdos más preciados, organizados cronológicamente
+        </p>
+        {% if total_memories %}
+            <p class="text-sm text-pink-600 mt-2">
+                {{ total_memories }} recuerdo{{ total_memories|pluralize }}
+            </p>
+        {% endif %}
+    </div>
+
+    <!-- Botón para agregar recuerdo -->
+    <div class="text-center">
+        <a href="{% url 'memories:create_memory' %}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-medium rounded-lg hover:from-pink-600 hover:to-rose-600 transition-all transform hover:scale-105 shadow-lg">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Agregar Nuevo Recuerdo
+        </a>
+    </div>
+
+    <!-- Grid de recuerdos -->
+    {% if memories %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for memory in memories %}
+                <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden border border-pink-200 hover:shadow-xl transition-all transform hover:scale-105">
+                    <!-- Imagen clicable -->
+                    <a href="{% url 'memories:memory_detail' memory.pk %}" class="block">
+                        <div class="aspect-w-16 aspect-h-12 bg-gray-200 relative group">
+                            <img src="{{ memory.image.url }}" alt="{{ memory.title }}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
+                                <svg class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <!-- Contenido -->
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <a href="{% url 'memories:memory_detail' memory.pk %}" class="hover:text-pink-600 transition-colors">
+                                <h3 class="text-lg font-semibold text-gray-900 truncate">
+                                    {{ memory.title }}
+                                </h3>
+                            </a>
+                            <span class="text-sm text-pink-600 font-medium">
+                                {{ memory.date|date:"d M Y" }}
+                            </span>
+                        </div>
+                        
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                            {{ memory.description|truncatewords:20 }}
+                        </p>
+                        
+                        <!-- Botones de acción -->
+                        <div class="flex space-x-2">
+                            <a href="{% url 'memories:memory_detail' memory.pk %}" class="flex-1 bg-green-50 text-green-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-green-100 transition-colors text-center">
+                                Ver
+                            </a>
+                            <a href="{% url 'memories:edit_memory' memory.pk %}" class="flex-1 bg-blue-50 text-blue-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors text-center">
+                                Editar
+                            </a>
+                            <a href="{% url 'memories:delete_memory' memory.pk %}" class="flex-1 bg-red-50 text-red-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors text-center">
+                                Eliminar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Paginación -->
+        {% if is_paginated %}
+            <div class="flex justify-center mt-8">
+                <nav class="flex items-center space-x-2">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1" class="px-3 py-2 text-sm font-medium text-gray-500 hover:text-pink-600 transition-colors">
+                            Primera
+                        </a>
+                        <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-2 text-sm font-medium text-gray-500 hover:text-pink-600 transition-colors">
+                            Anterior
+                        </a>
+                    {% endif %}
+
+                    <span class="px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-300">
+                        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-2 text-sm font-medium text-gray-500 hover:text-pink-600 transition-colors">
+                            Siguiente
+                        </a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}" class="px-3 py-2 text-sm font-medium text-gray-500 hover:text-pink-600 transition-colors">
+                            Última
+                        </a>
+                    {% endif %}
+                </nav>
+            </div>
+        {% endif %}
+    {% else %}
+        <!-- Estado vacío -->
+        <div class="text-center py-16">
+            <div class="mx-auto h-24 w-24 bg-gradient-to-r from-pink-400 to-rose-400 rounded-full flex items-center justify-center mb-6">
+                <svg class="h-12 w-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-semibold text-gray-900 mb-2 font-script">
+                Tu línea de tiempo está esperando
+            </h3>
+            <p class="text-gray-600 mb-6 max-w-md mx-auto">
+                Comienza a crear tu colección de recuerdos. Cada momento especial merece ser recordado.
+            </p>
+            <a href="{% url 'memories:create_memory' %}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-medium rounded-lg hover:from-pink-600 hover:to-rose-600 transition-all transform hover:scale-105 shadow-lg">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Crear mi primer recuerdo
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

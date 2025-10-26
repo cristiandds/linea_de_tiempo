@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Iniciar Sesión - Línea de Tiempo Personal{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <!-- Header -->
+        <div class="text-center">
+            <div class="mx-auto h-16 w-16 bg-gradient-to-r from-pink-400 to-rose-400 rounded-full flex items-center justify-center mb-4">
+                <svg class="h-8 w-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+                </svg>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900 font-script">
+                Bienvenido de vuelta
+            </h2>
+            <p class="mt-2 text-sm text-gray-600">
+                Inicia sesión para acceder a tus recuerdos
+            </p>
+        </div>
+
+        <!-- Formulario -->
+        <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-pink-200">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Errores generales del formulario -->
+                {% if form.non_field_errors %}
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        {% for error in form.non_field_errors %}
+                            <p class="text-sm text-red-600">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- Campo Username -->
+                <div>
+                    <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Nombre de Usuario
+                    </label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <div class="mt-1 text-sm text-red-600">
+                            {% for error in form.username.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Campo Password -->
+                <div>
+                    <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Contraseña
+                    </label>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                        <div class="mt-1 text-sm text-red-600">
+                            {% for error in form.password.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Botón de login -->
+                <div>
+                    <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all transform hover:scale-105">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <svg class="h-5 w-5 text-pink-300 group-hover:text-pink-200" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                        </span>
+                        Iniciar Sesión
+                    </button>
+                </div>
+
+                <!-- Enlace a registro -->
+                <div class="text-center">
+                    <p class="text-sm text-gray-600">
+                        ¿No tienes una cuenta?
+                        <a href="{% url 'memories:register' %}" class="font-medium text-pink-600 hover:text-pink-500 transition-colors">
+                            Regístrate aquí
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="text-center">
+            <p class="text-xs text-gray-500">
+                Tu privacidad es importante. Tus recuerdos están seguros y solo tú puedes acceder a ellos.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

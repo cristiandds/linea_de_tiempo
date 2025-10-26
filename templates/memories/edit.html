@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Recuerdo - Línea de Tiempo Personal{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-8" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+                <a href="{% url 'memories:timeline' %}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-pink-600 transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                    </svg>
+                    Mi Timeline
+                </a>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    <a href="{% url 'memories:memory_detail' object.pk %}" class="ml-1 text-sm font-medium text-gray-700 hover:text-pink-600 transition-colors md:ml-2">{{ object.title|truncatechars:20 }}</a>
+                </div>
+            </li>
+            <li>
+                <div class="flex items-center">
+                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">Editar</span>
+                </div>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="text-center mb-8">
+        <div class="mx-auto h-16 w-16 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full flex items-center justify-center mb-4">
+            <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-900 font-script mb-2">
+            Editar Recuerdo
+        </h1>
+        <p class="text-gray-600">
+            Actualiza los detalles de tu recuerdo especial
+        </p>
+    </div>
+
+    <!-- Imagen actual -->
+    {% if object.image %}
+        <div class="mb-8 text-center">
+            <p class="text-sm font-medium text-gray-700 mb-3">Imagen actual:</p>
+            <div class="inline-block relative">
+                <img src="{{ object.image.url }}" alt="{{ object.title }}" class="h-40 w-auto rounded-lg shadow-lg">
+                <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center">
+                    <span class="text-white opacity-0 hover:opacity-100 text-sm font-medium">Imagen actual</span>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Formulario -->
+    <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-blue-200">
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Campo Título -->
+            <div>
+                <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.title.label }}
+                    <span class="text-red-500">*</span>
+                </label>
+                {{ form.title }}
+                {% if form.title.help_text %}
+                    <p class="mt-1 text-sm text-gray-500">{{ form.title.help_text }}</p>
+                {% endif %}
+                {% if form.title.errors %}
+                    <div class="mt-1 text-sm text-red-600">
+                        {% for error in form.title.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Campo Descripción -->
+            <div>
+                <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.description.label }}
+                    <span class="text-red-500">*</span>
+                </label>
+                {{ form.description }}
+                {% if form.description.help_text %}
+                    <p class="mt-1 text-sm text-gray-500">{{ form.description.help_text }}</p>
+                {% endif %}
+                {% if form.description.errors %}
+                    <div class="mt-1 text-sm text-red-600">
+                        {% for error in form.description.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Campo Imagen -->
+            <div>
+                <label for="{{ form.image.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.image.label }}
+                    <span class="text-red-500">*</span>
+                </label>
+                <p class="text-sm text-gray-500 mb-2">Deja vacío para mantener la imagen actual</p>
+                {{ form.image }}
+                {% if form.image.help_text %}
+                    <p class="mt-1 text-sm text-gray-500">{{ form.image.help_text }}</p>
+                {% endif %}
+                {% if form.image.errors %}
+                    <div class="mt-1 text-sm text-red-600">
+                        {% for error in form.image.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <!-- Preview de nueva imagen -->
+                <div id="image-preview" class="mt-4 hidden">
+                    <p class="text-sm font-medium text-gray-700 mb-2">Nueva imagen:</p>
+                    <div class="relative inline-block">
+                        <img id="preview-img" class="h-32 w-auto rounded-lg shadow-md" alt="Vista previa">
+                        <button type="button" onclick="clearImagePreview()" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors">
+                            ×
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campo Fecha -->
+            <div>
+                <label for="{{ form.date.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ form.date.label }}
+                    <span class="text-red-500">*</span>
+                </label>
+                {{ form.date }}
+                {% if form.date.help_text %}
+                    <p class="mt-1 text-sm text-gray-500">{{ form.date.help_text }}</p>
+                {% endif %}
+                {% if form.date.errors %}
+                    <div class="mt-1 text-sm text-red-600">
+                        {% for error in form.date.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Información de metadatos -->
+            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                <h3 class="text-sm font-medium text-gray-700 mb-2">Información del recuerdo</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+                    <div>
+                        <span class="font-medium">Creado:</span>
+                        {{ object.created_at|date:"d/m/Y H:i" }}
+                    </div>
+                    <div>
+                        <span class="font-medium">Última actualización:</span>
+                        {{ object.updated_at|date:"d/m/Y H:i" }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex space-x-4 pt-6">
+                <button type="submit" class="flex-1 bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-3 px-6 rounded-lg font-medium hover:from-blue-600 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all transform hover:scale-105">
+                    <span class="flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Actualizar Recuerdo
+                    </span>
+                </button>
+                
+                <a href="{% url 'memories:timeline' %}" class="flex-1 bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors text-center">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="mt-6 text-center">
+        <p class="text-sm text-gray-500">
+            <span class="text-red-500">*</span> Campos requeridos
+        </p>
+        <p class="text-xs text-gray-400 mt-2">
+            Los cambios se guardarán inmediatamente. Puedes volver a editar este recuerdo cuando quieras.
+        </p>
+    </div>
+</div>
+
+<!-- JavaScript para preview de imagen -->
+<script>
+    document.getElementById('{{ form.image.id_for_label }}').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        const preview = document.getElementById('image-preview');
+        const previewImg = document.getElementById('preview-img');
+        
+        if (file) {
+            // Validar tipo de archivo
+            if (!file.type.startsWith('image/')) {
+                alert('Por favor selecciona un archivo de imagen válido.');
+                e.target.value = '';
+                return;
+            }
+            
+            // Validar tamaño (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('La imagen no puede ser mayor a 5MB.');
+                e.target.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                preview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.classList.add('hidden');
+        }
+    });
+    
+    function clearImagePreview() {
+        document.getElementById('{{ form.image.id_for_label }}').value = '';
+        document.getElementById('image-preview').classList.add('hidden');
+    }
+    
+    // Establecer fecha de hoy como máximo
+    document.getElementById('{{ form.date.id_for_label }}').max = new Date().toISOString().split('T')[0];
+</script>
+{% endblock %}

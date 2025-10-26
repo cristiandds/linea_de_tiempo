@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Acceso prohibido - Línea de Tiempo Personal{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 text-center">
+        <!-- Icono de error -->
+        <div class="mx-auto h-24 w-24 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center mb-8">
+            <svg class="h-12 w-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+            </svg>
+        </div>
+
+        <!-- Contenido del error -->
+        <div>
+            <h1 class="text-6xl font-bold text-gray-900 font-script mb-4">403</h1>
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">
+                Acceso prohibido
+            </h2>
+            <p class="text-gray-600 mb-8">
+                No tienes permisos para acceder a esta página o realizar esta acción. 
+                Los recuerdos son privados y solo tú puedes gestionarlos.
+            </p>
+        </div>
+
+        <!-- Acciones -->
+        <div class="space-y-4">
+            <a href="{% url 'memories:timeline' %}" class="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 px-6 rounded-lg font-medium hover:from-pink-600 hover:to-rose-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all transform hover:scale-105 inline-block">
+                <span class="flex items-center justify-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    Ir a mi timeline
+                </span>
+            </a>
+            
+            {% if not user.is_authenticated %}
+            <a href="{% url 'memories:login' %}" class="w-full bg-blue-100 text-blue-700 py-3 px-6 rounded-lg font-medium hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors inline-block">
+                Iniciar sesión
+            </a>
+            {% endif %}
+        </div>
+
+        <!-- Información adicional -->
+        <div class="mt-8 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+            <h3 class="text-sm font-medium text-yellow-800 mb-2">¿Por qué veo este error?</h3>
+            <ul class="text-sm text-yellow-700 space-y-1">
+                <li>• Intentaste acceder a recuerdos de otro usuario</li>
+                <li>• Tu sesión puede haber expirado</li>
+                <li>• No tienes permisos para esta acción</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
