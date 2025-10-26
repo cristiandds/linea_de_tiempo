@@ -6,7 +6,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, current_dir)
 
 # Configurar Django settings
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'timeline_love.settings_cpanel')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'timeline_love.settings')
 
 try:
     # Importar Django
