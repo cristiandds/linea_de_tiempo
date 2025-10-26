@@ -2,6 +2,17 @@
 Middleware personalizado para seguridad adicional
 """
 
+import time
+from django.http import HttpResponse
+
+# Importación condicional para compatibilidad
+try:
+    from django.http import HttpResponseTooManyRequests
+except ImportError:
+    # Fallback para versiones anteriores de Django
+    class HttpResponseTooManyRequests(HttpResponse):
+        status_code = 429
+
 
 class SecurityHeadersMiddleware:
     """
@@ -46,7 +57,7 @@ class RateLimitMiddleware:
         # Rate limiting básico para POST requests
         if request.method == 'POST':
             ip = self.get_client_ip(request)
-            current_time = __import__('time').time()
+            current_time = time.time()
             
             # Limpiar intentos antiguos (más de 1 hora)
             self.attempts = {
@@ -60,7 +71,6 @@ class RateLimitMiddleware:
                 
                 # Máximo 10 intentos por hora
                 if attempts_data['count'] >= 10 and time_diff < 3600:
-                    from django.http import HttpResponseTooManyRequests
                     return HttpResponseTooManyRequests(
                         "Demasiados intentos. Intenta de nuevo más tarde."
                     )
