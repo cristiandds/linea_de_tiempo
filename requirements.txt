@@ -1,18 +1,16 @@
 # Dependencias principales
-Django>=4.2.0,<6.0.0
-Pillow>=10.0.0
+Django==4.2.7
+Pillow==10.0.1
 
-# Dependencias de producción
-gunicorn>=21.2.0
-whitenoise>=6.6.0
-psycopg2-binary>=2.9.0
-dj-database-url>=2.1.0
+# Dependencias de producción (comentadas para cPanel básico)
+# gunicorn>=21.2.0
+# whitenoise>=6.6.0
+# psycopg2-binary>=2.9.0
+# dj-database-url>=2.1.0
 
-# Dependencias opcionales para validaciones avanzadas
-python-magic>=0.4.27
-
-# Dependencias de monitoreo y optimización
-psutil>=5.9.0
+# Dependencias opcionales (comentadas para cPanel básico)
+# python-magic>=0.4.27
+# psutil>=5.9.0
 
 # Dependencias de desarrollo (comentadas para producción)
 # coverage>=7.3.0
