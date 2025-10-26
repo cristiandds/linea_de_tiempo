@@ -8,19 +8,10 @@ sys.path.insert(0, current_dir)
 # Configurar Django settings
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'timeline_love.settings')
 
-try:
-    # Importar Django
-    import django
-    django.setup()
-    
-    # Importar la aplicación WSGI
-    from django.core.wsgi import get_wsgi_application
-    application = get_wsgi_application()
-    
-except Exception as e:
-    # Si hay error, crear una aplicación simple que muestre el error
-    def application(environ, start_response):
-        status = '500 Internal Server Error'
-        headers = [('Content-type', 'text/plain')]
-        start_response(status, headers)
-        return [f'Error: {str(e)}'.encode('utf-8')]
+# Configurar Django
+import django
+django.setup()
+
+# Importar la aplicación WSGI
+from django.core.wsgi import get_wsgi_application
+application = get_wsgi_application()
