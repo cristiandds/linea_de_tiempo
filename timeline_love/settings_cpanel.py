@@ -6,7 +6,7 @@ from .settings import *
 import os
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True  # Temporalmente True para ver errores
 
 # SECURITY WARNING: define the correct hosts in production.
 ALLOWED_HOSTS = [
