@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-2o+#fh)1&-j*lj31d)&48or3^*%*g6+3%1#lr=q$c@zyq6p1o8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['softechperu.com,linea_de_tiempo.softechperu.com''linea-de-tiempo-ibkf.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['linea-de-tiempo-ibkf.onrender.com', 'localhost', '127.0.0.1']
 
 
 

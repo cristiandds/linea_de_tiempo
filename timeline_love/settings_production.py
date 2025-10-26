@@ -12,21 +12,20 @@ DEBUG = False
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    # Añadir aquí el dominio de producción
-    # 'tu-dominio.com',
-    # 'www.tu-dominio.com',
+    'linea-de-tiempo-ibkf.onrender.com',  # Tu dominio de Render
+    # Añadir aquí otros dominios si los tienes
 ]
 
-# Database para producción (PostgreSQL recomendado)
+# Database para producción
+# Render proporciona DATABASE_URL automáticamente
+import dj_database_url
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'timeline_love_prod'),
-        'USER': os.environ.get('DB_USER', 'timeline_user'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 # Configuración de seguridad para producción
